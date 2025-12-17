@@ -91,6 +91,8 @@ public class LibraryService {
       return Result.failure("MEMBER_NOT_FOUND");
     }
 
+    // TODO logic for to check the max count for reservations
+
     Book entity = book.get();
 
     if (entity.getReservationQueue().isEmpty()) {
