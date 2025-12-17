@@ -14,7 +14,7 @@ public class LibraryService {
   private static final int DEFAULT_LOAN_DAYS = 14;
 
   private final BookRepository bookRepository;
-  private final MemberRepository memberRepository;g
+  private final MemberRepository memberRepository;
 
   public LibraryService(BookRepository bookRepository, MemberRepository memberRepository) {
     this.bookRepository = bookRepository;
