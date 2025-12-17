@@ -42,14 +42,14 @@ The backend is a Spring Boot application (modules: core/persistence/api). Domain
 
 Key behaviors to implement/adjust:
 1) **Prevent double loans and respect queues**  
-   - A book already on loan must not be loaned again.  
+   ~~- A book already on loan must not be loaned again.~~  
    - If a reservation queue exists, only the head of the queue should receive the book (no line-jumping via direct borrow).
    - Returns should only succeed when initiated by the current borrower.
 
 2) **Reservation lifecycle**
-   - Members may reserve a loaned book; duplicate reservations by the same member should be rejected.  
-   - Reserving an available book should immediately loan it to the reserver (if eligible).  
-   - Returning a book must hand it to the next eligible reserver in order; skip ineligible/missing members and continue. Surface who received it.  
+   - ~~Members may reserve a loaned book; duplicate reservations by the same member should be rejected.~~  
+   - ~~Reserving an available book should immediately loan it to the reserver (if eligible).~~  
+   - ~~Returning a book must hand it to the next eligible reserver in order; skip ineligible/missing members and continue. Surface who received it.~~  
    - Keep the queue consistent when handoffs happen.
 
 3) **Borrow-limit enforcement & clarity**  

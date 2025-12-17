@@ -48,6 +48,11 @@ public class LibraryService {
       }
     }
 
+
+    if (memberId == entity.getReservationQueue().get(0)) {
+      entity.getReservationQueue().remove(memberId);
+    }
+
     entity.setLoanedTo(memberId);
     entity.setDueDate(LocalDate.now().plusDays(DEFAULT_LOAN_DAYS));
 
@@ -61,6 +66,7 @@ public class LibraryService {
     if (book.isEmpty()) {
       return ResultWithNext.failure("BOOK DOES NOT EXIST");
     }
+
 
     Book entity = book.get();
     if (entity.getLoanedTo() != memberId) {
