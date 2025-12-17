@@ -29,12 +29,24 @@ public class LibraryService {
     if (!memberRepository.existsById(memberId)) {
       return Result.failure("MEMBER_NOT_FOUND");
     }
+
+    if (!bookAlreadyBorrowedOut(bookId)) {
+      return Result.failure("BOOK ALREADY BORROWED OUT");
+    }
+
+
     if (!canMemberBorrow(memberId)) {
       return Result.failure("BORROW_LIMIT");
     }
     Book entity = book.get();
+
+    if (memberId == entity.getReservationQueue().get(0)) {
+      entity.getReservationQueue().remove(memberId);
+    }
+
     entity.setLoanedTo(memberId);
     entity.setDueDate(LocalDate.now().plusDays(DEFAULT_LOAN_DAYS));
+
     bookRepository.save(entity);
     return Result.success();
   }
@@ -42,15 +54,22 @@ public class LibraryService {
   public ResultWithNext returnBook(String bookId, String memberId) {
     Optional<Book> book = bookRepository.findById(bookId);
     if (book.isEmpty()) {
-      return ResultWithNext.failure();
+      return ResultWithNext.failure("BOOK DOES NOT EXIST");
     }
 
+
     Book entity = book.get();
+    if (entity.getLoanedTo() != memberId) {
+      return ResultWithNext.failure("ONLY BORROWER CAN RETURN THE BOOK");
+    }
     entity.setLoanedTo(null);
     entity.setDueDate(null);
     String nextMember =
         entity.getReservationQueue().isEmpty() ? null : entity.getReservationQueue().get(0);
     bookRepository.save(entity);
+    if (nextMember.length() > 0) {
+      borrowBook(bookId, nextMember);
+    }
     return ResultWithNext.success(nextMember);
   }
 
@@ -64,6 +83,18 @@ public class LibraryService {
     }
 
     Book entity = book.get();
+
+    if (entity.getReservationQueue().isEmpty()) {
+      borrowBook(bookId, memberId);
+    }
+
+    if (entity.getLoanedTo().equals(memberId)) {
+      return Result.failure("YOU CAN'T RESERVE THE BOOK WHILE BORROWING IT");
+    }
+
+    if (entity.getReservationQueue().contains(memberId)) {
+      return Result.failure("MEMBER WITH ID " + memberId + " HAS ALREADY RESERVED THE BOOK");
+    }
     entity.getReservationQueue().add(memberId);
     bookRepository.save(entity);
     return Result.success();
@@ -85,6 +116,16 @@ public class LibraryService {
     }
     bookRepository.save(entity);
     return Result.success();
+  }
+
+  public boolean bookAlreadyBorrowedOut(String bookId) {
+
+    Optional<Book> book = bookRepository.findById(bookId);
+    Book entity = book.get();
+    if (entity.getLoanedTo() == null) {
+      return true;
+    }
+    return false;
   }
 
   public boolean canMemberBorrow(String memberId) {
@@ -251,7 +292,7 @@ public class LibraryService {
       return new ResultWithNext(true, nextMemberId);
     }
 
-    public static ResultWithNext failure() {
+    public static ResultWithNext failure(String memberId) {
       return new ResultWithNext(false, null);
     }
   }
