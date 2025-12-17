@@ -19,6 +19,8 @@ public class Member {
 
   @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
+  private int count = 0;
 
   public Member(String id, String name) {
     this.id = id;

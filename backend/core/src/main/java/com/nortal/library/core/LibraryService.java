@@ -47,7 +47,9 @@ public class LibraryService {
       }
     }
 
-
+    Optional <Member> memberOptional = memberRepository.findById(memberId);
+    Member member = memberOptional.get();
+    member.setCount(member.getCount() + 1);
     entity.setLoanedTo(memberId);
     entity.setDueDate(LocalDate.now().plusDays(DEFAULT_LOAN_DAYS));
 
@@ -139,13 +141,15 @@ public class LibraryService {
     if (!memberRepository.existsById(memberId)) {
       return false;
     }
-    int active = 0;
-    for (Book book : bookRepository.findAll()) {
-      if (memberId.equals(book.getLoanedTo())) {
-        active++;
-      }
-    }
-    return active < MAX_LOANS;
+//    int active = 0;
+//    for (Book book : bookRepository.findAll()) {
+//      if (memberId.equals(book.getLoanedTo())) {
+//        active++;
+//      }
+//    }
+    Optional <Member> memberOptional = memberRepository.findById(memberId);
+    Member member = memberOptional.get();
+    return member.getCount() < MAX_LOANS;
   }
 
   public List<Book> searchBooks(String titleContains, Boolean availableOnly, String loanedTo) {
