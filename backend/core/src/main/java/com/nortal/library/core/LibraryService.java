@@ -77,7 +77,7 @@ public class LibraryService {
     bookRepository.save(entity);
     if (nextMember != null) {
       borrowBook(bookId, nextMember);
-      return ResultWithNext.success(nextMember + " - book loaned out to next member in the que");
+      return ResultWithNext.success(entity.getTitle() + " - loaned out to the next member with id : " + memberId + " in the que");
     }
 
     return ResultWithNext.success("No one in the reservation que, book returned successfully");
