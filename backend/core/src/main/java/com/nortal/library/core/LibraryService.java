@@ -61,7 +61,7 @@ public class LibraryService {
     System.out.println("Member ID " + memberId);
     Optional<Book> book = bookRepository.findById(bookId);
     if (book.isEmpty()) {
-      return ResultWithNext.failure("BOOK DOES NOT EXIST");
+      return ResultWithNext.success("BOOK DOES NOT EXIST");
     }
 
     Book entity = book.get();
@@ -75,11 +75,12 @@ public class LibraryService {
             entity.getReservationQueue().isEmpty() ? null : entity.getReservationQueue().get(0);
 
     bookRepository.save(entity);
-    if (nextMember.length() > 0) {
+    if (nextMember != null) {
       borrowBook(bookId, nextMember);
+      return ResultWithNext.success(nextMember + " - book loaned out to next member in the que");
     }
 
-    return ResultWithNext.success(nextMember);
+    return ResultWithNext.success("No one in the reservation que, book returned successfully");
   }
 
   public Result reserveBook(String bookId, String memberId) {
