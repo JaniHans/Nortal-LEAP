@@ -80,7 +80,7 @@ public class LibraryService {
       return ResultWithNext.success(entity.getTitle() + " - loaned out to the next member with id : " + memberId + " in the que");
     }
 
-    return ResultWithNext.success("No one in the reservation que, book returned successfully");
+    return ResultWithNext.failure(nextMember);
   }
 
   public Result reserveBook(String bookId, String memberId) {
@@ -307,7 +307,7 @@ public class LibraryService {
     }
 
     public static ResultWithNext failure(String memberId) {
-      return new ResultWithNext(false, null);
+      return new ResultWithNext(true, null);
     }
   }
 

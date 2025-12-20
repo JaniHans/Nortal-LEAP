@@ -10,3 +10,7 @@ Some problems still remain with error handling with messages in the front end, b
 but controllers are setup in a certain way that expect a boolean value true from the returnBook method in service. I might be wrong, also depending on the return value you could manipulate the front messaging.
 Added count field for member entity to avoid pulling all books from the database.
 Rest of the logic was done mostly by if statement checks and a few additional method additions.
+
+## Fixed
+Fixed borrowAndReturnHappyPath() integration test method. I was returning a more UI friendly messaging instead the test is expecting null if there is no nextmember in the reservation que.
+Also changed back  ResultNext boolean value to true, as our controller expecting a true value there.
