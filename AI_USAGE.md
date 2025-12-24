@@ -14,3 +14,12 @@ Rest of the logic was done mostly by if statement checks and a few additional me
 ## Fixed
 Fixed borrowAndReturnHappyPath() integration test method. I was returning a more UI friendly messaging instead the test is expecting null if there is no nextmember in the reservation que.
 Also changed back  ResultNext boolean value to true, as our controller expecting a true value there.
+## Added
+Bookid and memberId null checks in libraryservice methods to improve perf tests, we are avoiding unnecessary repository calls if one of the parameters are null or empty. It seems the data has improved after implementation
+Before : 
+
+![img.png](img.png)
+
+After : 
+
+![img_1.png](img_1.png)
