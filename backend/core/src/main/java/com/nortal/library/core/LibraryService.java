@@ -22,6 +22,15 @@ public class LibraryService {
   }
 
   public Result borrowBook(String bookId, String memberId) {
+
+    // added additional empty and null checks
+    if (isEmptyOrNull(memberId)) {
+      return Result.failure("Member id can't be null or empty");
+    }
+    if (isEmptyOrNull(bookId)) {
+      return Result.failure("Book id can't be null or empty");
+    }
+
     Optional<Book> book = bookRepository.findById(bookId);
     if (book.isEmpty()) {
       return Result.failure("BOOK_NOT_FOUND");
@@ -58,6 +67,15 @@ public class LibraryService {
   }
 
   public ResultWithNext returnBook(String bookId, String memberId) {
+
+    // added additional empty and null checks
+    if (isEmptyOrNull(bookId)) {
+      return ResultWithNext.failure(memberId);
+    }
+    if (isEmptyOrNull(memberId)) {
+      return ResultWithNext.failure(bookId);
+    }
+
     System.out.println("Member ID " + memberId);
     Optional<Book> book = bookRepository.findById(bookId);
     if (book.isEmpty()) {
@@ -84,6 +102,14 @@ public class LibraryService {
   }
 
   public Result reserveBook(String bookId, String memberId) {
+
+    if (isEmptyOrNull(memberId)) {
+      return Result.failure("Member id can't be null or empty");
+    }
+    if (isEmptyOrNull(bookId)) {
+      return Result.failure("Book id can't be null or empty");
+    }
+
     Optional<Book> book = bookRepository.findById(bookId);
     if (book.isEmpty()) {
       return Result.failure("BOOK_NOT_FOUND");
@@ -110,6 +136,10 @@ public class LibraryService {
     entity.getReservationQueue().add(memberId);
     bookRepository.save(entity);
     return Result.success();
+  }
+
+  public boolean isEmptyOrNull(String id) {
+    return id.isEmpty();
   }
 
   public Result cancelReservation(String bookId, String memberId) {
